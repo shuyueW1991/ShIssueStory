@@ -4,6 +4,8 @@ import scrapy
 import time
 import random
 
+from shissue.items import ShissueItem
+
 
 class ShiSpider(scrapy.Spider):
     name = 'shi'
@@ -23,8 +25,8 @@ class ShiSpider(scrapy.Spider):
     #         print('Now yielding ', start_date.strftime("%Y%m%d"))
 
     def url_gen(self):
-        start_page = 5
-        end_page = 5
+        start_page = 8
+        end_page = 8
 
         while start_page <= end_page:
             yield start_page
@@ -70,13 +72,12 @@ class ShiSpider(scrapy.Spider):
 
         # enter all the daily news 
         links = response.xpath('//a[contains(@href, "/nw4411/20")]/@href').extract()
-        for link in links[4:6]:
+        # for link in links:
+        for link in links[2:4]:
             link = 'https://www.shanghai.gov.cn' + link
             print('link', link)
             yield scrapy.Request(url=link, callback=self.parse_content, dont_filter = True)
             time.sleep(random.randint(1,2))
-
-
 
 
     def parse_content(self, response):
@@ -87,14 +88,26 @@ class ShiSpider(scrapy.Spider):
             title   = response.xpath('//h2[contains(@class, "Article-title")]/text()').extract()
             date    = response.xpath('//small[contains(@class, "Article-time")]/text()').extract()
             source  = response.xpath('//small[contains(@class, "Article-time")]/span/text()').extract()
+            # author  = response.xpath('//div[contains(@class, "Article_content")]/div/p[1]/text()').extract()
             shit    = response.xpath('//div[contains(@class, "Article_content")]/div/p/text()').extract()
             
-            print('title', title[0])
-            print('date', date[0])
-            print('source', source[0])
-            print('author', shit[0])
-            print('shit', shit[1:])
+
+            item = ShissueItem()
+            item['title'] =  title[0].strip().strip("\n")
+            item['date']  =  date[0].strip().strip("\n")
+            item['source'] = source[0].strip("来源：").strip("  ").strip().strip("\n")
+            item['author'] = shit[0].strip("  ").strip().strip("\n")
+
+            item['text'] = shit[1].strip("  ").strip("\u2003\u2003").strip().strip("\n")
+            for i in range(2, len(shit)):
+                item['text'] += shit[i].strip("  ").strip("\u2003\u2003").strip().strip("\n")
+
+
+            print('title', item['title'])
+            print('date', item['date'])
+            print('source', item['source'])
+            print('author', item['author'])
+            print('text', item['text'])
+            yield item
 
  
-
-        

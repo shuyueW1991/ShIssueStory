@@ -62,9 +62,15 @@ ROBOTSTXT_OBEY = True
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'shissue.pipelines.ShissuePipeline': 300,
-#}
+ITEM_PIPELINES = {
+   'shissue.pipelines.ShissuePipeline': 300,
+}
+
+MONGO_HOST = "localhost"
+MONGO_PORT = 27017
+MONGO_DB_NAME = "shitissue"
+MONGO_COLLECTION_NAME = "news"
+
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
