@@ -14,13 +14,12 @@ import json
 import pymongo
 
 
-
 class ShissuePipeline:
     def __init__(self):
         self.ids_seen = set()
 
     def open_spider(self, spider):
-        self.file = open('itemss.jl', 'w', encoding="utf8")
+        self.file = open('itemss.jl', 'a', encoding="utf8")
 
     def close_spider(self, spider):
         self.file.close()
@@ -35,3 +34,39 @@ class ShissuePipeline:
             self.ids_seen.add(adapter['title'])
             self.file.write(line)
             return item
+
+
+class ShissueMongoDBPipeline:
+    collection_name = "shissue"
+
+    def __init__(self, mongo_uri, mongo_db):
+        self.mongo_uri = mongo_uri
+        self.mongo_db = mongo_db
+        self.ids_seen = set()
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(
+            mongo_uri=crawler.settings.get('MONGO_URI'),
+            mongo_db=crawler.settings.get('MONGO_DATABASE', 'items')
+        )
+
+    def open_spider(self, spider):
+        self.client = pymongo.MongoClient(self.mongo_uri)
+        self.db = self.client[self.mongo_db]
+    
+    def close_spider(self, spider):
+        self.client.close()
+
+    def process_item(self, item, spider):
+        if ItemAdapter(item)['title'] in self.ids_seen:
+            raise DropItem(f"Duplicate item found: {item!r}")
+        else:
+            self.db[self.collection_name].insert_one(ItemAdapter(item).asdict())
+        return item
+
+
+
+
+
+
