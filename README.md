@@ -12,7 +12,7 @@ I calculate the frequency of the top ranked words and make it into wordcloud.
 <!---
 ![plot](http://github.com/shuyueW1991/ShIssueStory/blob/main/Analysis/materials0_30.png?raw=true)
 --->
-![plot](http://github.com/shuyueW1991/ShIssueStory/Analysis/materials0_30.png?raw=true)
+![plot](http://github.com/shuyueW1991/ShIssueStory/Analysis/materials0_30.png)
 
 ## Further thoughts...
 verbs that appeared
