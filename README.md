@@ -9,7 +9,7 @@ The scraped json data will be transferred to filcease ANALYSIS for further analy
 ## Analysis (of semantics)
 I calculate the frequency of the top ranked words and make it into wordcloud.
 
-![alt text](http://github.com/shuyueW1991/ShIssueStory/blob/main/Analysis/materials0_30.png?raw=true)
+![Screenshot](http://github.com/shuyueW1991/ShIssueStory/blob/main/Analysis/materials0_30.png?raw=true)
 
 ## Further thoughts...
 verbs that appeared
